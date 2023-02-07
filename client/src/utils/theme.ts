@@ -7,7 +7,7 @@ const config: ThemeConfig = {
 
 const overrides = {
   fonts: {
-    heading: '\'Inter\', sans-serif',
+    heading: '\'Hammersmith One\', sans-serif',
     body: '\'Inter\', sans-serif',
   },
   config,

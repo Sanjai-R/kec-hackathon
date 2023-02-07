@@ -14,6 +14,10 @@ import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 import "@fontsource/inter/800.css";
 import "@fontsource/inter/900.css";
+
+import "@fontsource/hammersmith-one/400.css";
+
+
 import { RecoilRoot } from 'recoil'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
