@@ -5,6 +5,8 @@ import SideBar from "./Components/SideBar";
 import PrivateRoute from "./routes/PrivateRoute";
 import Bookings from "./Pages/Bookings";
 import History from "./Pages/History";
+import Profile from "./Pages/Profile";
+import Notifications from "./Pages/Notifications";
 
 const App = () => {
   return (
@@ -16,6 +18,8 @@ const App = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/history" element={<History />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Route>
         </Route>
       </Routes>

@@ -1,8 +1,12 @@
+import { Flex } from '@chakra-ui/react'
 import React from 'react'
+import Navbar from '../Components/Navbar'
 
 const Dashboard = () => {
     return (
-        <div>Dashboard</div>
+        <Flex width="100%" flexDir="column">
+            <Navbar />
+        </Flex>
     )
 }
 

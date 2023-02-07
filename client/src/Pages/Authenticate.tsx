@@ -10,7 +10,7 @@ const Authenticate = () => {
     const Login = () => {
         return (
             <Flex width="100%" flexDir="column" mt="5">
-                <Heading fontSize="3xl" mb="5">Login</Heading>
+                <Heading fontSize="2xl" mb="5">Login</Heading>
                 <FormControl isRequired mb="3">
                     <FormLabel>Email address</FormLabel>
                     <Input type='email' placeholder='Enter mail' />
@@ -47,7 +47,7 @@ const Authenticate = () => {
     const SignUp = () => {
         return (
             <Flex width="100%" flexDir="column" mt="5">
-                <Heading fontSize="3xl" mb="5">Sign Up</Heading>
+                <Heading fontSize="2xl" mb="5">Sign Up</Heading>
                 <FormControl isRequired mb="3">
                     <FormLabel>Name</FormLabel>
                     <Input type='text' placeholder="Enter name" />
@@ -104,7 +104,7 @@ const Authenticate = () => {
     return (
         <Flex width="100%" height="$100vh" flexDir="column" alignItems="center" justifyContent="center">
             <Flex px="12" py="10" flexDir="column" style={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }} width="2xl" alignItems="center" justifyContent="center">
-                <Heading fontWeight="700">KEC Hall Booking</Heading>
+                <Heading fontWeight="700" fontSize="3xl">KEC Hall Booking</Heading>
                 {isLogin ? <Login /> : <SignUp />}
             </Flex>
         </Flex>
