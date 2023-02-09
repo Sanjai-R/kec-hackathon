@@ -5,18 +5,6 @@ export const updateClub = async (req, res) => {
       if (!id) {
         return res.send({ status: false, data: null, desc: "data missing" });
       }
-    //   let filter;
-    //   if (type == "student") {
-    //     filter = {
-    //       student_coordinator: id,
-    //     };
-    //   } else if (type == "faculty") {
-    //     filter = {
-    //       faculty_coordinator: id,
-    //     };
-    //   } else {
-    //     res.send({ status: false, data: null, desc: "check your type" });
-    //   }
 
     const clubs = await clubSchema.findByIdAndUpdate(id, req.body, { new: true });
     if (clubs === null) {
