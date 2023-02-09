@@ -9,7 +9,7 @@ interface Props {
     selectedRange: DateRange | undefined,
     setIsSingleDayEvent: Dispatch<SetStateAction<string>>,
     setSelectedDate: Dispatch<SetStateAction<Date | undefined>>,
-    setSelectedRange: Dispatch<SetStateAction<DateRange | undefined>>
+    setSelectedRange: Dispatch<SetStateAction<DateRange | undefined>>,
 }
 
 const FilterSection = ({ isSingleDayEvent, setIsSingleDayEvent, selectedDate, setSelectedDate, selectedRange, setSelectedRange }: Props) => {
