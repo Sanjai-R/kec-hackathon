@@ -8,7 +8,8 @@ const eventSchema = new Schema({
         required: true
     },
     club: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref:"Club",
         required: true
     },
     staff_incharge: {

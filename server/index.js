@@ -9,6 +9,7 @@ import userRoute from "./router/authRoute.js";
 import hallRoute from "./router/hallRoute.js";
 import eventRoute from "./router/eventRoute.js";
 import bookingRoute from "./router/bookingRouter.js";
+import clubRoute from "./router/clubRoute.js";
 
 dotenv.config();
 
@@ -36,3 +37,4 @@ app.use('/api/user', userRoute)
 app.use('/api/hall', hallRoute)
 app.use('/api/event', eventRoute)
 app.use('/api/booking', bookingRoute)
+app.use('/api/club',clubRoute);

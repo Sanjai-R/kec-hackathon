@@ -9,7 +9,7 @@ const clubSchema = new Schema({
     },
     logo: {
         type: String,
-        required: true,
+        
     },
     faculty_coordinator: {
         type: Schema.Types.ObjectId,
@@ -21,7 +21,8 @@ const clubSchema = new Schema({
     },
     hosted_events:{
         type: [Schema.Types.ObjectId],
-        ref: "Event"
+        ref: "Event",
+        default:[]
     }
 })
 

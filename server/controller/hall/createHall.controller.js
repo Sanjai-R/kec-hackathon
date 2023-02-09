@@ -16,12 +16,12 @@ const createHallController = async (req, res) => {
         const hall = await data.populate("incharge", "-password");
         res
             .status(200)
-            .send({ status: true, data: hall, message: "Hall Created Successfully" });
+            .send({ status: true, data: hall, desc: "Hall Created Successfully" });
     } catch (error) {
         console.log(error);
         res
             .status(500)
-            .send({ status: true, error: error, message: "Something went wrong" });
+            .send({ status: true, error: error, desc: "Something went wrong" });
     }
 };
 

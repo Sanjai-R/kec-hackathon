@@ -13,15 +13,15 @@ const createEventController = async (req, res) => {
             description,
             requirements,
         }).save();
-        const event = await data.populate("staff_incharge", "-password");
+        const event = await data.populate("staff_incharge club", "-password");
         res
             .status(200)
-            .send({ status: true, data: event, message: "Event Created Successfully" });
+            .send({ status: true, data: event, desc: "Event Created Successfully" });
     } catch (error) {
         console.log(error);
         res
             .status(500)
-            .send({ status: true, error: error, message: "Something went wrong" });
+            .send({ status: true, error: error, desc: "Something went wrong" });
     }
 }
 
