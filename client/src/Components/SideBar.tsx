@@ -16,8 +16,8 @@ const SideBar = () => {
     const navigate = useNavigate();
 
     return (
-        <Grid height="100vh" templateColumns="repeat(6, 1fr)">
-            <GridItem colSpan={1} bg="#282626">
+        <Flex height="100vh" width="100%">
+            <Flex bg="#282626" width="18%" overflowY="hidden">
                 <VStack align="flex-start" h="100%" justify="space-between" width="100%">
                     <VStack align="flex-start" pt="20%" width="100%">
                         <Flex flexDir="column" width="100%" alignItems="center" color="white">
@@ -45,11 +45,11 @@ const SideBar = () => {
                         </Flex>
                     </VStack>
                 </VStack>
-            </GridItem>
-            <GridItem colSpan={5}>
+            </Flex>
+            <Flex overflowY="scroll" width="82%">
                 <Outlet />
-            </GridItem>
-        </Grid>
+            </Flex>
+        </Flex>
     );
 };
 

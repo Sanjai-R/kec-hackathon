@@ -9,6 +9,7 @@ const Navbar = () => {
 
     const nav = {
         '/': 'Dashboard',
+        '/bookings': 'Bookings',
         '/history': 'History',
         '/notifications': 'Notifications',
         '/profile': 'Profile',
@@ -26,6 +27,7 @@ const Navbar = () => {
                     name='Nanthakumaran S'
                     src={'https://avatars.githubusercontent.com/u/59391441?v=4'}
                     onClick={() => navigate('/profile')}
+                    cursor="pointer"
                 />
             </Flex>
         </Flex>
