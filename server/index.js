@@ -5,6 +5,10 @@ import dotenv from "dotenv";
 import config from "./config/db_config.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import userRoute from "./router/authRoute.js";
+import hallRoute from "./router/hallRoute.js";
+import eventRoute from "./router/eventRoute.js";
+import bookingRoute from "./router/bookingRouter.js";
 
 dotenv.config();
 
@@ -15,7 +19,7 @@ app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
-const httpServer = createServer();
+const httpServer = createServer(app);
 const io = new Server(httpServer, {});
 
 io.on("connection", (socket) => {
@@ -24,6 +28,11 @@ io.on("connection", (socket) => {
 
 httpServer.listen(PORT);
 
-app.get("_", (req, res) => {
+app.get("/", (req, res) => {
     res.send("hello from server");
 });
+
+app.use('/api/user', userRoute)
+app.use('/api/hall', hallRoute)
+app.use('/api/event', eventRoute)
+app.use('/api/booking', bookingRoute)
