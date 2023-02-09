@@ -6,3 +6,8 @@ export const userAtom = atom({
         email: '',
     },
 });
+
+export const loadingAtom = atom({
+    key: 'loading',
+    default: false,
+})

@@ -1,8 +1,12 @@
-import { Button, Divider, Flex, Grid, GridItem, Heading, Spacer, Text, VStack } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, Spacer, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { RiWalkLine } from "react-icons/ri";
 import { MdOutlineDashboard, MdOutlineBookmarkAdd, MdOutlineHistory } from "react-icons/md";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { loadingAtom } from "../state/atom";
+import Lottie from 'react-lottie-player'
+import lottieFile from "../assets/lottie.json"
 
 const sizeOfIcon = 25
 
@@ -14,6 +18,8 @@ const SideBar = () => {
     ];
     const location = useLocation();
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useRecoilState(loadingAtom)
 
     return (
         <Flex height="100vh" width="100%">
@@ -46,7 +52,15 @@ const SideBar = () => {
                     </VStack>
                 </VStack>
             </Flex>
-            <Flex overflowY="scroll" width="82%">
+            <Flex overflowY={loading ? "hidden" : "scroll"} width="82%" position="relative">
+                <Flex width="100%" height="100%" position="absolute" backdropFilter="blur(10px) " display={!loading ? "none" : "inherit"} zIndex="999" alignItems="center" justifyContent="center" flexDir="column">
+                    <Lottie
+                        loop
+                        animationData={lottieFile}
+                        play
+                        style={{ width: 150, height: 150 }}
+                    />
+                </Flex>
                 <Outlet />
             </Flex>
         </Flex>
