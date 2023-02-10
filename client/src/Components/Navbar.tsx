@@ -2,10 +2,13 @@ import { Avatar, Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/rea
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MdNotificationsNone } from 'react-icons/md'
+import { useRecoilValue } from 'recoil'
+import { userAtom } from '../state/atom'
 
 const Navbar = () => {
     const navigate = useNavigate()
     const location = useLocation()
+    const user = useRecoilValue(userAtom)
 
     const nav = {
         '/': 'Dashboard',
@@ -24,8 +27,7 @@ const Navbar = () => {
                 </Box>
                 <Avatar
                     size="md"
-                    name='Nanthakumaran S'
-                    src={'https://avatars.githubusercontent.com/u/59391441?v=4'}
+                    name={user.name}
                     onClick={() => navigate('/profile')}
                     cursor="pointer"
                 />

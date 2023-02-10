@@ -5,6 +5,7 @@ import { RiWindyLine, RiProjector2Line } from 'react-icons/ri'
 import { TbBottle } from 'react-icons/tb'
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi'
 import { FiChevronsRight, FiSpeaker } from 'react-icons/fi'
+import { AiOutlineThunderbolt } from 'react-icons/ai'
 import { Badge, Button, Divider, Flex, Heading, IconButton, Image, Switch, Text } from '@chakra-ui/react'
 
 const sizeOfIcon = 20;
@@ -16,6 +17,7 @@ const HallCard = () => {
         { name: 'Projector', icon: <RiProjector2Line size={sizeOfIcon} /> },
         { name: 'Speaker', icon: <FiSpeaker size={sizeOfIcon} /> },
         { name: 'AC', icon: <RiWindyLine size={sizeOfIcon} /> },
+        { name: 'Generator', icon: <AiOutlineThunderbolt size={sizeOfIcon} /> },
     ]
 
     const [isFullDay, setIsFullDay] = useState(false)
