@@ -13,12 +13,18 @@ interface Props {
     setSelectedRange: Dispatch<SetStateAction<DateRange | undefined>>,
     clubs: [] | [clubType],
     selectedClub: clubType | undefined,
-    setSelectedClub: Dispatch<SetStateAction<clubType | undefined>>
+    setSelectedClub: Dispatch<SetStateAction<clubType | undefined>>,
+    capacity: number,
+    setCapacity: Dispatch<SetStateAction<number>>
+    hall: string,
+    setHall: Dispatch<SetStateAction<string>>
+    eventName: string,
+    setEventName: Dispatch<SetStateAction<string>>
 }
 
 const halls = ['Classroom', 'Laboratory', 'Seminar Hall', 'Maharaja Auditorium', 'Conventional Centre']
 
-const FilterSection = ({ isSingleDayEvent, setIsSingleDayEvent, selectedDate, setSelectedDate, selectedRange, setSelectedRange, clubs, selectedClub, setSelectedClub }: Props) => {
+const FilterSection = ({ isSingleDayEvent, setIsSingleDayEvent, selectedDate, setSelectedDate, selectedRange, setSelectedRange, clubs, selectedClub, setSelectedClub, capacity, setCapacity, setHall, hall, eventName, setEventName }: Props) => {
 
 
     return (
@@ -37,16 +43,16 @@ const FilterSection = ({ isSingleDayEvent, setIsSingleDayEvent, selectedDate, se
                     </FormControl>
                     <FormControl isRequired mb="3">
                         <FormLabel>Event Name</FormLabel>
-                        <Input type='text' placeholder="Enter event name" />
+                        <Input type='text' placeholder="Enter event name" value={eventName} onChange={(e) => setEventName(e.target.value)} />
                     </FormControl>
                     <FormControl isRequired mb="3">
                         <FormLabel>Event Capacity</FormLabel>
-                        <Input type='number' placeholder="Enter event capacity" />
+                        <Input type='number' placeholder="Enter event capacity" value={capacity} onChange={(e) => setCapacity(parseInt(e.target.value))} />
                     </FormControl>
                     <FormControl mb="3" isRequired>
                         <FormLabel>Required Hall</FormLabel>
-                        <Select placeholder='Select option'  >
-                            {halls.map((item, index) => <option value={index} key={index}>{item}</option>)}
+                        <Select placeholder='Select option' value={hall} onChange={(e) => setHall(e.target.value)}>
+                            {halls.map((item, index) => <option value={item} key={index}>{item}</option>)}
                         </Select>
                     </FormControl>
                 </Flex>
