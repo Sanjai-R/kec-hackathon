@@ -28,7 +28,7 @@ const Navbar = () => {
                 <Avatar
                     size="md"
                     name={user.name}
-                    onClick={() => navigate('/profile')}
+                    // onClick={() => navigate('/profile')}
                     cursor="pointer"
                 />
             </Flex>

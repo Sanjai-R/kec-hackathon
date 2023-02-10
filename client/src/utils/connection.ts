@@ -8,3 +8,8 @@ export const getUserByMail = 'api/user/getUserByMail'
 // BOOKINGS
 export const getClub = 'api/club/getClub'
 export const singleFilter = 'api/hall/getHallBySingle'
+export const createEvent = 'api/event/create'
+export const booking = 'api/booking'
+
+// DASHBOARD
+export const getDashboard = 'api/user/getData'

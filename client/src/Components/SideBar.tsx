@@ -10,16 +10,18 @@ import lottieFile from "../assets/lottie.json"
 const sizeOfIcon = 25
 
 const SideBar = () => {
-    const navItems = [
-        { title: "Dashboard", icon: <MdOutlineDashboard size={sizeOfIcon} />, loc: '/' },
-        { title: "Bookings", icon: <MdOutlineBookmarkAdd size={sizeOfIcon} />, loc: '/bookings' },
+    const usernavItems = [
         { title: "History", icon: <MdOutlineHistory size={sizeOfIcon} />, loc: '/history' },
+        { title: "Bookings", icon: <MdOutlineBookmarkAdd size={sizeOfIcon} />, loc: '/bookings' },
     ];
+    const sAdminItems = [
+        { title: "Dashboard", icon: <MdOutlineDashboard size={sizeOfIcon} />, loc: '/' },
+    ]
     const location = useLocation();
     const navigate = useNavigate();
 
     const [loading, setLoading] = useRecoilState(loadingAtom)
-    const setUserState = useSetRecoilState(userAtom)
+    const [user, setUserState] = useRecoilState(userAtom)
 
     return (
         <Flex height="100vh" width="100%">
@@ -33,9 +35,11 @@ const SideBar = () => {
                             <Divider width="80%" borderColor="gray" />
                             <Spacer mb="10" />
                             <Flex flexDir="column" width="100%" alignItems="start" pl='10' gap='5'>
-                                {navItems.map((item, index) => {
+                                {user.role.collection === 'user' ? usernavItems.map((item, index) => {
                                     return <Flex key={index} flexDir="row" alignItems="center" justifyContent="center" gap="3" color={location.pathname === item.loc ? "white" : "whiteAlpha.700"} _hover={{ color: "white" }} cursor="pointer" onClick={() => navigate(item.loc)}>{item.icon} <Text fontSize="lg">{item.title}</Text></Flex>
-                                })}
+                                }) : user.role.collection === 's-admin' ? sAdminItems.map((item, index) => {
+                                    return <Flex key={index} flexDir="row" alignItems="center" justifyContent="center" gap="3" color={location.pathname === item.loc ? "white" : "whiteAlpha.700"} _hover={{ color: "white" }} cursor="pointer" onClick={() => navigate(item.loc)}>{item.icon} <Text fontSize="lg">{item.title}</Text></Flex>
+                                }) : ''}
                             </Flex>
                         </Flex>
                     </VStack>
