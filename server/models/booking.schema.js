@@ -4,8 +4,8 @@ const { Schema } = mongoose;
 
 const bookingSchema = new Schema({
     requested_by: {
-        type: [Schema.Types.ObjectId],
-        ref: "User",
+        type: Schema.Types.ObjectId,
+        ref: "Tracking",
         required: true
     },
     requested_hall: {

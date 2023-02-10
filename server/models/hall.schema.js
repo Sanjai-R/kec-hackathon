@@ -22,6 +22,9 @@ const hallSchema = new Schema({
     gallery: {
         type: Array,
         default:[]
+    },
+    type:{
+        type: String,
     }
 })  
 
