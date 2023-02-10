@@ -29,7 +29,7 @@ export const getHallBySingle = async (req, res) => {
   });
   for (let i = 0; i < list.length; i++) {
     const id = mongoose.Types.ObjectId(list[i]);
-    const temp = await hallSchema.findById(id)
+    const temp = await hallSchema.findById(id).populate("incharge")
     arr.push({ ...temp, period: pr[i] })
   }
   const data = arr.map((item) => ({ ...item._doc, period: item.period }));
