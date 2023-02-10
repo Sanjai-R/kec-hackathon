@@ -49,7 +49,7 @@ export const getEventByMultiple = async (req, res) => {
         $in: date
       }
     }
-
+  
   });
   const matchedSingleDate = await bookingSchema.find({
     "schedule.date": { $in: date }

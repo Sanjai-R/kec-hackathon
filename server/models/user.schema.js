@@ -20,7 +20,14 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    role: { type: Map },
+    role: {
+        type: {
+            type: String,
+        },
+        collection: {
+            type: String,
+        }
+    },
 });
 
 const user = mongoose.model("User", userSchema);
