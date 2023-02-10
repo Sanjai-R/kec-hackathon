@@ -4,6 +4,13 @@ export const userAtom = atom({
     key: 'user',
     default: {
         email: '',
+        name: '',
+        contact: '',
+        role: {
+            type: '',
+            collection: '',
+        },
+        id: '',
     },
 });
 

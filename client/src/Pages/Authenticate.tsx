@@ -1,9 +1,12 @@
 import { Button, Flex, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, InputGroup, InputLeftAddon, InputRightElement, Radio, RadioGroup, Text, useToast } from '@chakra-ui/react'
 import axios from 'axios';
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FiChevronsRight } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import { errToast, successToast } from '../Components/Toast';
-import { baseURL, login } from '../utils/connection';
+import { userAtom } from '../state/atom';
+import { baseURL, getUserByMail, login, signup } from '../utils/connection';
 
 type loginDataType = {
     email: string;
@@ -28,7 +31,7 @@ interface SignUpProps {
 
 const validateEmailNdPassword = (email: string, password: string, toast: any) => {
     if (email === '') {
-        errToast(toast, 'Field Missing.', 'Please fill email to continue furthur')
+        errToast(toast, 'Field Missing.', 'Please fill email to continue further')
         return false
     }
     if (password === '') {
@@ -55,6 +58,8 @@ const Login = ({ setIsLogin }: LoginProps) => {
     const handleClick = () => setShow(!show)
 
     const toast = useToast();
+    const navigate = useNavigate()
+    const setUserState = useSetRecoilState(userAtom)
 
     const [loginData, setLoginData] = useState<loginDataType>({
         email: '',
@@ -67,7 +72,6 @@ const Login = ({ setIsLogin }: LoginProps) => {
             return
         }
         const response = await axios.post(baseURL + login, loginData)
-        console.log(response)
         if (response.data.desc === 'no user found') {
             errToast(toast, 'No user found.', 'Please Signup before Login')
             return
@@ -78,6 +82,9 @@ const Login = ({ setIsLogin }: LoginProps) => {
         }
         if (response.data.status) {
             successToast(toast, 'Success', 'You have successfully authenticated')
+            localStorage.setItem('email', response.data.data.email)
+            setUserState(response.data.data);
+            navigate('/')
         } else {
             errToast(toast, 'Error', 'Some error occurred. Please try again later.')
         }
@@ -125,36 +132,75 @@ const SignUp = ({ setIsLogin }: SignUpProps) => {
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
 
-    const [signupData, setSignUpdata] = useState<signupDataType>({
+    const [signupData, setSignUpData] = useState<signupDataType>({
         name: '',
         email: '',
         password: '',
         contact: '',
-        role: ''
+        role: 'Student'
     })
+
+    const toast = useToast()
+    const navigate = useNavigate()
+    const setUserState = useSetRecoilState(userAtom)
+
+    const signupConnection = async () => {
+        if (signupData.name === '') {
+            errToast(toast, 'Field Missing.', 'Please fill name to continue further')
+            return
+        }
+        const isValid = validateEmailNdPassword(signupData.email, signupData.password, toast);
+        if (!isValid) {
+            return
+        }
+        if (signupData.contact === '') {
+            errToast(toast, 'Field Missing.', 'Please fill contact to continue further')
+            return
+        }
+        const response = await axios.post(baseURL + signup, {
+            ...signupData,
+            role: {
+                type: signupData.role.toLowerCase(),
+                collection: 'user'
+            }
+        })
+        console.log(response)
+        if (response.data.desc === 'Email already exist') {
+            errToast(toast, 'User already found.', 'Please Login with your registered email')
+            return
+        }
+        if (response.data.status) {
+            successToast(toast, 'Success', 'You have successfully registered')
+            localStorage.setItem('email', response.data.data.email)
+            setUserState(response.data.data);
+            navigate('/')
+        } else {
+            errToast(toast, 'Error', 'Some error occurred. Please try again later.')
+        }
+    }
 
     return (
         <Flex width="100%" flexDir="column" mt="5">
             <Heading fontSize="2xl" mb="5">Sign Up</Heading>
             <FormControl isRequired mb="3">
                 <FormLabel>Name</FormLabel>
-                <Input type='text' placeholder="Enter name" />
+                <Input type='text' placeholder="Enter name" value={signupData.name} onChange={(e) => setSignUpData((prev) => ({ ...prev, name: e.target.value }))} />
             </FormControl>
             <FormControl isRequired mb="3">
                 <FormLabel>Email address</FormLabel>
-                <Input type='email' placeholder='Enter email' />
+                <Input type='email' placeholder='Enter email' value={signupData.email} onChange={(e) => setSignUpData((prev) => ({ ...prev, email: e.target.value }))} />
                 <FormHelperText>use kongu.edu or kongu.ac.in</FormHelperText>
             </FormControl>
             <FormControl isRequired mb="3">
                 <FormLabel>Contact</FormLabel>
                 <InputGroup>
                     <InputLeftAddon children='+91' />
-                    <Input type='tel' placeholder='phone number' />
+                    <Input type='tel' placeholder='phone number' value={signupData.contact} onChange={(e) => setSignUpData((prev) => ({ ...prev, contact: e.target.value }))} />
                 </InputGroup>
             </FormControl>
             <FormControl as='fieldset' mb='3' isRequired>
                 <FormLabel as='legend'>Role</FormLabel>
-                <RadioGroup defaultValue='Itachi'>
+                <RadioGroup defaultValue={signupData.role} onChange={(e) => setSignUpData((prev) => ({ ...prev, role: e }))}>
                     <HStack spacing='24px'>
                         <Radio value='Student'>Student</Radio>
                         <Radio value='Faculty'>Faculty</Radio>
@@ -168,6 +214,8 @@ const SignUp = ({ setIsLogin }: SignUpProps) => {
                         pr='4.5rem'
                         type={show ? 'text' : 'password'}
                         placeholder='Enter password'
+                        value={signupData.password}
+                        onChange={(e) => setSignUpData((prev) => ({ ...prev, password: e.target.value }))}
                     />
                     <InputRightElement width='4.5rem'>
                         <Button h='1.75rem' size='sm' onClick={handleClick}>
@@ -181,7 +229,7 @@ const SignUp = ({ setIsLogin }: SignUpProps) => {
                 <Text fontSize="md" color="blue.400" fontWeight="500" cursor="pointer" _hover={{ color: "blue.300" }} decoration="underline" onClick={() => setIsLogin(true)}>Log In</Text>
             </Flex>
             <Flex justifyContent='end' width='100%'>
-                <Button colorScheme="blue" rightIcon={<FiChevronsRight />}>
+                <Button colorScheme="blue" rightIcon={<FiChevronsRight />} onClick={signupConnection}>
                     Get In
                 </Button>
             </Flex>
@@ -191,6 +239,23 @@ const SignUp = ({ setIsLogin }: SignUpProps) => {
 
 const Authenticate = () => {
     const [isLogin, setIsLogin] = useState(true);
+    const setUserData = useSetRecoilState(userAtom)
+    const navigate = useNavigate()
+
+    const fetch = async (email: string) => {
+        const response = await axios.get(baseURL + getUserByMail, {
+            params: { email }
+        })
+        setUserData(response.data.data)
+    }
+
+    useEffect(() => {
+        const email = localStorage.getItem('email');
+        if (email) {
+            fetch(email);
+            navigate('/')
+        }
+    }, []);
 
     return (
         <Flex width="100%" height="$100vh" flexDir="column" alignItems="center" justifyContent="center">

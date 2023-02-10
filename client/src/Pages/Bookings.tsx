@@ -1,15 +1,34 @@
 import { Flex, Heading, Spacer, Text } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../Components/Navbar'
 import { DateRange } from 'react-day-picker'
 import 'react-day-picker/dist/style.css';
 import HallCard from '../Components/HallCard';
 import FilterSection from '../Components/FilterSection';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../state/atom';
+import axios from 'axios';
+import { baseURL, getClub } from '../utils/connection';
 
 const Bookings = () => {
     const [isSingleDayEvent, setIsSingleDayEvent] = useState('1')
     const [selectedDate, setSelectedDate] = React.useState<Date>();
     const [selectedRange, setSelectedRange] = useState<DateRange | undefined>();
+    const user = useRecoilValue(userAtom)
+
+    const fetchClubs = async () => {
+        const response = await axios.get(baseURL + getClub, {
+            params: {
+                type: user.role.type,
+                id: user.id,
+            }
+        });
+        console.log(response)
+    }
+
+    useEffect(() => {
+        fetchClubs()
+    }, []);
 
     return (
         <Flex width="100%" flexDir="column">

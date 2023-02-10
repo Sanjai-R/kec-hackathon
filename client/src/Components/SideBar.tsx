@@ -1,10 +1,9 @@
-import { Box, Divider, Flex, Heading, Spacer, Text, VStack } from "@chakra-ui/react";
-import React from "react";
+import { Divider, Flex, Heading, Spacer, Text, VStack } from "@chakra-ui/react";
 import { RiWalkLine } from "react-icons/ri";
 import { MdOutlineDashboard, MdOutlineBookmarkAdd, MdOutlineHistory } from "react-icons/md";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { loadingAtom } from "../state/atom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { loadingAtom, userAtom } from "../state/atom";
 import Lottie from 'react-lottie-player'
 import lottieFile from "../assets/lottie.json"
 
@@ -20,6 +19,7 @@ const SideBar = () => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useRecoilState(loadingAtom)
+    const setUserState = useSetRecoilState(userAtom)
 
     return (
         <Flex height="100vh" width="100%">
@@ -43,7 +43,20 @@ const SideBar = () => {
                         <Flex flexDir="column" width="100%" alignItems="center" color="white">
                             <Divider width="80%" mb="8" borderColor="gray" />
                             <Flex flexDir="column" width="100%" alignItems="start" pl='10' gap='5'>
-                                <Flex flexDir="row" alignItems="center" justifyContent="center" gap="3">
+                                <Flex flexDir="row" alignItems="center" justifyContent="center" gap="3" cursor="pointer" onClick={() => {
+                                    localStorage.setItem('email', '');
+                                    setUserState({
+                                        name: '',
+                                        email: '',
+                                        contact: '',
+                                        role: {
+                                            type: '',
+                                            collection: '',
+                                        },
+                                        id: '',
+                                    })
+                                    navigate('/authenticate')
+                                }}>
                                     <RiWalkLine size={sizeOfIcon} style={{ transform: 'scaleX(-1)' }} />
                                     <Text fontSize="lg">Exit</Text>
                                 </Flex>
