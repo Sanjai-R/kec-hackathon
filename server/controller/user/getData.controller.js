@@ -2,6 +2,7 @@ import bookingSchema from "../../models/booking.schema.js";
 import hallSchema from "../../models/hall.schema.js";
 import userSchema from "../../models/user.schema.js";
 import mongoose from "mongoose";
+import moment from "moment";
 
 export const getDataByDate = async (req, res) => {
     const { user_id } = req.query;
@@ -10,7 +11,8 @@ export const getDataByDate = async (req, res) => {
         return res.send({ status: false, desc: "User not found" });
     }
     const role = user.role.collection;
-    let date = new Date().toJSON().slice(0, 10);
+    let date = moment().format("YYYY-MM-DD");
+    console.log(date)
     if (role === "s-admin") {
         const existingBooking = await bookingSchema.find({
             "schedule.date": new Date(date),
