@@ -8,6 +8,6 @@ const hallRoute = express.Router();
 
 hallRoute.post("/create", createHall);
 hallRoute.get("/getHallBySingle", getHallBySingle)
-hallRoute.get("/getHallByMulti", getEventByMultiple)
+hallRoute.post("/getHallByMultiple", getEventByMultiple)
 
 export default hallRoute;

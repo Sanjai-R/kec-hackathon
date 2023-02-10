@@ -6,16 +6,21 @@ import { getTrackingId } from "./tracking.controller.js";
 
 export const createBooking = async (req, res) => {
     const { requested_by, requested_hall_type, requested_hall, event, type, schedule, range } = req.body;
-    let date;
+    let date,dateRange;
     if (type === "single") {
         date = new Date(schedule.date);
+    }else{
+        dateRange = schedule.range.map((e)=> new Date(e))
+        console.log(dateRange)
     }
     const existingHall = await trackingSchema.findOne({requested_hall});
     const trackingData = await getTrackingId(requested_by, requested_hall_type,requested_hall);
     // console.log(existingHall)
     // 
-    const newData = { ...req.body, requested_by: trackingData._id }
+
+    const newData = {...{ ...req.body, requested_by: trackingData._id },"schedule.range":dateRange}
     const newBooking = new bookingSchema({ ...newData, schedule: { ...newData.schedule, date } });
+    console.log(newBooking)
     try {
         await newBooking.save();
         const bookingData = await newBooking.populate(
