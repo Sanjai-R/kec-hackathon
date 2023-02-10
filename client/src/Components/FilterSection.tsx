@@ -2,6 +2,7 @@ import { Box, Button, Divider, Flex, FormControl, FormLabel, HStack, Input, Radi
 import { Dispatch, SetStateAction } from "react";
 import { DateRange, DayPicker } from "react-day-picker";
 import { FiChevronsDown } from "react-icons/fi";
+import { clubType } from "../Pages/Bookings";
 
 interface Props {
     isSingleDayEvent: string,
@@ -10,31 +11,49 @@ interface Props {
     setIsSingleDayEvent: Dispatch<SetStateAction<string>>,
     setSelectedDate: Dispatch<SetStateAction<Date | undefined>>,
     setSelectedRange: Dispatch<SetStateAction<DateRange | undefined>>,
+    clubs: [] | [clubType],
+    selectedClub: clubType | undefined,
+    setSelectedClub: Dispatch<SetStateAction<clubType | undefined>>,
+    capacity: number,
+    setCapacity: Dispatch<SetStateAction<number>>
+    hall: string,
+    setHall: Dispatch<SetStateAction<string>>
+    eventName: string,
+    setEventName: Dispatch<SetStateAction<string>>
 }
 
-const FilterSection = ({ isSingleDayEvent, setIsSingleDayEvent, selectedDate, setSelectedDate, selectedRange, setSelectedRange }: Props) => {
+const halls = ['Classroom', 'Laboratory', 'Seminar Hall', 'Maharaja Auditorium', 'Conventional Centre']
+
+const FilterSection = ({ isSingleDayEvent, setIsSingleDayEvent, selectedDate, setSelectedDate, selectedRange, setSelectedRange, clubs, selectedClub, setSelectedClub, capacity, setCapacity, setHall, hall, eventName, setEventName }: Props) => {
+
+
     return (
         <Flex flexDir="column" width="100%" alignItems="center" justifyContent="center" px="8">
             <Flex flexDir="row" width="100%" alignItems="center" justifyContent="center" gap="5">
                 <Flex flexDir="column" width="50%">
                     <FormControl mb="3" isRequired>
                         <FormLabel>Club Name</FormLabel>
-                        <Select placeholder='Select option'>
-                            <option value='option1'>Coding Club of KEC</option>
-                            <option value='option2'>Rotract Club of KEC</option>
+                        <Select placeholder='Select option' onChange={(e) => setSelectedClub(clubs[parseInt(e.target.value)])} >
+                            {clubs.map((item, index) => <option value={index} key={index}>{item['name']}</option>)}
                         </Select>
                     </FormControl>
                     <FormControl isRequired mb="3">
                         <FormLabel>Staff Coordinator</FormLabel>
-                        <Input type='text' value="R. Parameshwaran" disabled />
+                        <Input type='text' value={selectedClub?.faculty_coordinator.name} disabled />
                     </FormControl>
                     <FormControl isRequired mb="3">
                         <FormLabel>Event Name</FormLabel>
-                        <Input type='text' placeholder="Enter event name" />
+                        <Input type='text' placeholder="Enter event name" value={eventName} onChange={(e) => setEventName(e.target.value)} />
                     </FormControl>
                     <FormControl isRequired mb="3">
                         <FormLabel>Event Capacity</FormLabel>
-                        <Input type='number' placeholder="Enter event capacity" />
+                        <Input type='number' placeholder="Enter event capacity" value={capacity} onChange={(e) => setCapacity(parseInt(e.target.value))} />
+                    </FormControl>
+                    <FormControl mb="3" isRequired>
+                        <FormLabel>Required Hall</FormLabel>
+                        <Select placeholder='Select option' value={hall} onChange={(e) => setHall(e.target.value)}>
+                            {halls.map((item, index) => <option value={item} key={index}>{item}</option>)}
+                        </Select>
                     </FormControl>
                 </Flex>
                 <Flex flexDir="column" width="50%" alignItems="center" justifyContent="center">
@@ -61,8 +80,6 @@ const FilterSection = ({ isSingleDayEvent, setIsSingleDayEvent, selectedDate, se
                     />}
                 </Flex>
             </Flex>
-            <Button rightIcon={<FiChevronsDown />} leftIcon={<FiChevronsDown />} colorScheme="blue" mt="3" width="md" fontSize="lg">Filter Halls</Button>
-            <Divider mt="6" />
         </Flex>
     );
 }

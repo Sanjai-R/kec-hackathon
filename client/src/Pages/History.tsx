@@ -6,7 +6,6 @@ const History = () => {
     return (
         <div>
             <Navbar />
-            <Flex width="100%" flexDir="column" />
         </div>
     )
 };

@@ -7,3 +7,4 @@ export const getUserByMail = 'api/user/getUserByMail'
 
 // BOOKINGS
 export const getClub = 'api/club/getClub'
+export const singleFilter = 'api/hall/getHallBySingle'
