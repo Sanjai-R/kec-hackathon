@@ -1,28 +1,40 @@
 import bookingSchema from "../../models/booking.schema.js";
+import hallSchema from "../../models/hall.schema.js";
+import trackingSchema from "../../models/tracking.schema.js";
+import { getTrackingId } from "./tracking.controller.js";
+
 
 export const createBooking = async (req, res) => {
-    const { requested_by, requested_hall, event, type, schedule, range } = req.body;
-    const date = new Date(schedule.date);
-    const newBooking = new bookingSchema({ ...req.body, schedule: { ...req.body.schedule, date } });
+    const { requested_by, requested_hall_type, requested_hall, event, type, schedule, range } = req.body;
+    let date;
+    if (type === "single") {
+        date = new Date(schedule.date);
+    }
+    const existingHall = await trackingSchema.findOne({requested_hall});
+    const trackingData = await getTrackingId(requested_by, requested_hall_type,requested_hall);
+    // console.log(existingHall)
+    // 
+    const newData = { ...req.body, requested_by: trackingData._id }
+    const newBooking = new bookingSchema({ ...newData, schedule: { ...newData.schedule, date } });
     try {
         await newBooking.save();
         const bookingData = await newBooking.populate(
-            "requested_hall event requested_by",
+            "requested_hall event requested_by requested_by.requested_by requested_by.requested_hall",
             "-password"
         );
-        res.status(200).send({
+        res.send({
             status: true,
             data: bookingData,
-            message: "slot booked Successfully",
+            desc: "slot booked Successfully",
         });
     } catch (error) {
         console.log(error);
         res
-            .status(500)
+
             .send({
                 status: true,
                 error: error.message,
-                message: "Something went wrong",
+                desc: "Something went wrong",
             });
     }
 };

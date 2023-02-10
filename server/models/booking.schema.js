@@ -4,8 +4,8 @@ const { Schema } = mongoose;
 
 const bookingSchema = new Schema({
     requested_by: {
-        type: [Schema.Types.ObjectId],
-        ref: "User",
+        type: Schema.Types.ObjectId,
+        ref: "Tracking",
         required: true
     },
     requested_hall: {
@@ -27,10 +27,9 @@ const bookingSchema = new Schema({
         {
             date: {
                 type: Date,
-                required: true
             }, 
             period: {
-                type: String,
+                type: Array,
             },
             range: {
                 type: Array,
@@ -40,9 +39,7 @@ const bookingSchema = new Schema({
         type: String,
         enum: ["single", "multiple"],
     },
-    range: {
-        type: Array,
-    }
+
 
 })
 

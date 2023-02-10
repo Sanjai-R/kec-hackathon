@@ -30,7 +30,7 @@ const signupController = async (req, res) => {
     .then(async (user) => {
       if (user) {
         const token = generateToken(email);
-        return res.status(200).json({
+        return res.json({
           status: true,
           data: await userModel.findOne({ email }).select("-password"),
           token,
