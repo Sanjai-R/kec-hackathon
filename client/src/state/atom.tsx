@@ -10,7 +10,7 @@ export const userAtom = atom({
             type: '',
             collection: '',
         },
-        id: '',
+        _id: '',
     },
 });
 

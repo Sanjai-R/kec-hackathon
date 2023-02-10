@@ -53,7 +53,7 @@ const SideBar = () => {
                                             type: '',
                                             collection: '',
                                         },
-                                        id: '',
+                                        _id: '',
                                     })
                                     navigate('/authenticate')
                                 }}>
