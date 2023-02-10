@@ -21,7 +21,7 @@ const createEventController = async (req, res) => {
         console.log(error);
         res
             .status(500)
-            .send({ status: true, error: error, desc: "Something went wrong" });
+            .send({ status: true, error: error.message, desc: "Something went wrong" });
     }
 }
 

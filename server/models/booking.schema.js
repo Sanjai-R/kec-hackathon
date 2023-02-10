@@ -27,10 +27,9 @@ const bookingSchema = new Schema({
         {
             date: {
                 type: Date,
-                required: true
             }, 
             period: {
-                type: String,
+                type: Array,
             },
             range: {
                 type: Array,
@@ -40,9 +39,7 @@ const bookingSchema = new Schema({
         type: String,
         enum: ["single", "multiple"],
     },
-    range: {
-        type: Array,
-    }
+
 
 })
 
