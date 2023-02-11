@@ -1,7 +1,9 @@
 import trackingSchema from "../../models/tracking.schema.js";
+import { sendMail } from "./sendMail.controller.js";
 
 export const getTrackingId = async (id, type, requested_hall) => {
     let authorizers;
+
     if (type == "Conventional Centre") {
         authorizers = ["HOD", "CCO", "Registrar", "Principal"]
     } else if (type == "Maharaja Auditorium") {
@@ -16,9 +18,10 @@ export const getTrackingId = async (id, type, requested_hall) => {
         tracking: authorize_data,
         requested_hall
     }
-    console.log(newTracking)
 
     const tracking = await trackingSchema(newTracking);
     const data = await tracking.save();
+    const isMailSent = await sendMail("Rahul",type)
+    console.log(isMailSent)
     return data;
 }

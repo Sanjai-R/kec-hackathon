@@ -1,5 +1,5 @@
 import express from 'express';
-import { getDataByDate } from '../controller/user/getData.controller.js';
+import { getDataByDate, getDataByWeek } from '../controller/user/getData.controller.js';
 import { getHistory } from '../controller/user/getHistory.controller.js';
 import getUserByMail from '../controller/user/getUser.controller.js';
 import loginController from '../controller/user/login.controller.js';
@@ -15,4 +15,5 @@ authRoute.get('/getUserByMail', getUserByMail);
 authRoute.get('/actions',tracking)
 authRoute.get('/getData',getDataByDate)
 authRoute.get('/getHistory',getHistory)
+authRoute.get('/getDataByWeek',getDataByWeek)
 export default authRoute;
