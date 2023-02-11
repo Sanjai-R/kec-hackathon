@@ -152,6 +152,7 @@ const Bookings = () => {
                     date: moment(selectedDate).format('YYYY-MM-D'),
                     period: isFullDay ? [1, 2, 3, 4, 5, 6, 7] : selectedPeriods,
                 },
+                requested_hall_type: hall,
                 type: 'single'
             })
             if (response2.data.status) {

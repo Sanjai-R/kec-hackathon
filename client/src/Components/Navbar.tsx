@@ -16,6 +16,7 @@ const Navbar = () => {
         '/history': 'History',
         '/notifications': 'Notifications',
         '/profile': 'Profile',
+        '/track': 'Track Status',
     }
 
     return (

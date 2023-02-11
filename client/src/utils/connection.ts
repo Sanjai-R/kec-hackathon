@@ -12,4 +12,10 @@ export const createEvent = 'api/event/create'
 export const booking = 'api/booking'
 
 // DASHBOARD
-export const getDashboard = 'api/user/getData'
+export const getDashboard = 'api/user/getDataByWeek'
+
+// HISTORY
+export const history = 'api/user/getHistory'
+
+// TRACKING
+export const track = 'api/booking/getTracker'

@@ -7,6 +7,7 @@ import Bookings from "./Pages/Bookings";
 import History from "./Pages/History";
 import Profile from "./Pages/Profile";
 import Notifications from "./Pages/Notifications";
+import Track from "./Pages/Track";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/history" element={<History />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/track" element={<Track />} />
           </Route>
         </Route>
       </Routes>

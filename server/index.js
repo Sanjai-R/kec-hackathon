@@ -11,7 +11,6 @@ import eventRoute from "./router/eventRoute.js";
 import bookingRoute from "./router/bookingRouter.js";
 import clubRoute from "./router/clubRoute.js";
 import axios from "axios";
-import twilio from "twilio";
 
 dotenv.config();
 
