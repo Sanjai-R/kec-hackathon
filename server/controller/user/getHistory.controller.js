@@ -28,6 +28,5 @@ export const getHistory = async (req, res) => {
             },
         },
     ])
-    console.log(history)
     res.send({ status: true, data: history })
 }
