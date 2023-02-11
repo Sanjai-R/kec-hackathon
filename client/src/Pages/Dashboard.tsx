@@ -1,7 +1,7 @@
 import { Badge, Box, Button, Divider, Flex, Heading, IconButton, Image, Text, VStack } from '@chakra-ui/react'
 import axios from 'axios'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { cloneElement, ReactElement, useEffect, useMemo, useState } from 'react'
 import Marquee from 'react-fast-marquee'
 import { useNavigate } from 'react-router-dom'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
@@ -21,18 +21,11 @@ import {
 } from "chart.js";
 import { Doughnut, Line } from "react-chartjs-2";
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import ReactDataGrid from '@inovua/reactdatagrid-community';
-import '@inovua/reactdatagrid-community/base.css';
-import '@inovua/reactdatagrid-community/theme/default-light.css';
 
-const headerProps = {
-    style: {
-        fontWeight: 'bold',
-        fontSize: '1rem',
-    },
-};
-
-const gridStyle = { minHeight: 484 };
+import 'react-data-grid/lib/styles.css';
+import DataGrid, { DataGridProps } from 'react-data-grid';
+import { AiOutlineDownload } from 'react-icons/ai'
+import { GrRefresh } from 'react-icons/gr'
 
 ChartJS.register(ArcElement, CategoryScale,
     LinearScale,
@@ -81,6 +74,7 @@ const Dashboard = () => {
     const setLoading = useSetRecoilState(loadingAtom)
 
     const fetch = async () => {
+        setLoading(true)
         const response = await axios.get(baseURL + getDashboard)
         setResult(response.data.data)
         console.log(response.data.data);
@@ -91,7 +85,6 @@ const Dashboard = () => {
         if (user.role.collection === 'user') {
             navigate('/history')
         }
-        setLoading(true)
         fetch()
     }, [])
 
@@ -160,88 +153,116 @@ const Dashboard = () => {
     }
 
     const [tableData, setTableData] = useState<any>([])
+    const gridStyle = { minHeight: 550 };
 
     const columns = [
         {
-            name: 'date',
-            header: 'Date',
-            sortable: false,
-            render: ({ value }: { value: string }) => {
-                return (
-                    <Text fontSize="md">{value}</Text>
-                );
-            },
-            headerProps,
-            defaultVisible: false,
+            key: 'date',
+            name: 'Date',
+            width: 200
         },
         {
-            name: 'unusedHalls',
-            header: 'Un used halls',
-            sortable: false,
-            render: ({ value }: { value: string }) => {
-                return (
-                    <Text fontSize="md">{value}</Text>
-                );
-            },
-            headerProps,
-            defaultVisible: false,
+            key: 'usedHalls',
+            name: 'Used Halls',
+            width: 200
+
         },
         {
-            name: 'usedHalls',
-            header: 'Used halls',
-            sortable: false,
-            render: ({ value }: { value: string }) => {
-                return (
-                    <Text fontSize="md">{value}</Text>
-                );
-            },
-            headerProps,
-            defaultVisible: false,
+            key: 'unusedHalls',
+            name: 'Unused Halls',
+            width: 200
         },
         {
-            name: 'toCap',
-            header: 'Total capacity',
-            sortable: false,
-            render: ({ value }: { value: string }) => {
-                return (
-                    <Text fontSize="md">{value}</Text>
-                );
-            },
-            headerProps,
-            defaultVisible: false,
+            key: 'toCap',
+            name: 'Total capacity',
+            width: 200
         },
         {
-            name: 'ocCap',
-            header: 'Occupied capacity',
-            sortable: false,
-            render: ({ value }: { value: string }) => {
-                return (
-                    <Text fontSize="md">{value}</Text>
-                );
-            },
-            headerProps,
-            defaultVisible: false,
+            key: 'ocCap',
+            name: 'Occupied Capacity',
+            width: 200
         },
     ];
 
-    useEffect(() => {
+    async function exportToCsv<R, SR>(
+        gridElement: ReactElement<DataGridProps<R, SR>>,
+        fileName: string
+    ) {
+        const { head, body, foot } = await getGridContent(gridElement);
+        const content = [...head, ...body, ...foot]
+            .map((cells) => cells.map(serialiseCellValue).join(','))
+            .join('\n');
+
+        downloadFile(fileName, new Blob([content], { type: 'text/csv;charset=utf-8;' }));
+    }
+
+    async function getGridContent<R, SR>(gridElement: ReactElement<DataGridProps<R, SR>>) {
+        const { renderToStaticMarkup } = await import('react-dom/server');
+        const grid = document.createElement('div');
+        grid.innerHTML = renderToStaticMarkup(
+            cloneElement(gridElement, {
+                enableVirtualization: false
+            })
+        );
+
+        return {
+            head: getRows('.rdg-header-row'),
+            body: getRows('.rdg-row:not(.rdg-summary-row)'),
+            foot: getRows('.rdg-summary-row')
+        };
+
+        function getRows(selector: string) {
+            return Array.from(grid.querySelectorAll<HTMLDivElement>(selector)).map((gridRow) => {
+                return Array.from(gridRow.querySelectorAll<HTMLDivElement>('.rdg-cell')).map(
+                    (gridCell) => gridCell.innerText
+                );
+            });
+        }
+    }
+
+
+    function serialiseCellValue(value: unknown) {
+        if (typeof value === 'string') {
+            const formattedValue = value.replace(/"/g, '""');
+            return formattedValue.includes(',') ? `"${formattedValue}"` : formattedValue;
+        }
+        return value;
+    }
+
+    function downloadFile(fileName: string, data: Blob) {
+        const downloadLink = document.createElement('a');
+        downloadLink.download = fileName;
+        const url = URL.createObjectURL(data);
+        downloadLink.href = url;
+        downloadLink.click();
+        URL.revokeObjectURL(url);
+    }
+
+    const gridElement = (
+        <DataGrid columns={columns} rows={tableData} className="rdg-light" />
+    )
+
+
+    useMemo(() => {
         setTableData([])
-        result.map((item: any, index: number) => {
+        const arr = []
+        for (let i = 0; i < result.length; i++) {
             let ocCap = 0;
             let toCap = 0
-            for (let i = 0; i < item?.usedHalls.length; i++) {
-                ocCap += item?.usedHalls[i]?.event?.event_capacity;
-                toCap += item?.usedHalls[i]?.requested_hall.capacity;
+            for (let j = 0; j < result[i].usedHalls.length; j++) {
+                ocCap += result[i]?.usedHalls[j]?.event?.event_capacity;
+                toCap += result[i]?.usedHalls[j]?.requested_hall.capacity;
             }
             const obj = {
-                date: item?.date,
-                usedHalls: item?.usedHalls.length,
-                unusedHalls: item?.unusedHalls.length,
+                date: result[i]?.date,
+                usedHalls: result[i]?.usedHalls.length,
+                unusedHalls: result[i]?.unusedHalls.length,
                 ocCap,
                 toCap,
             }
-            setTableData((prev: any) => [...prev, obj])
-        })
+            arr.push(obj)
+        }
+        setTableData(arr)
         console.log(tableData)
     }, [result]);
 
@@ -251,11 +272,14 @@ const Dashboard = () => {
         <Flex width="100%" flexDir="column">
             <Navbar />
             <Divider mb="5" />
+            <Flex width="100%" px="10" justifyContent="end">
+                <Button aria-label='icon-button' leftIcon={<GrRefresh />} onClick={fetch} size="lg" >Refresh</Button>
+            </Flex>
             <Heading fontSize="2xl" px="10">Usage analytics</Heading>
             <Flex width="100%" px="10" justifyContent="space-between" alignItems="baseline">
                 <Flex width="30%" flexDir="column" alignItems="center" gap="3">
                     <Doughnut data={dataDoughnut} />
-                    <Text color="gray"><b>Today's report</b></Text>
+                    <Text color="gray"><b>Today's report - {moment().format('Do MMM YYYY')}</b></Text>
                 </Flex>
                 <Flex width="65%" flexDir="column" alignItems="center" gap="3">
                     <Line data={dataUsedNdUnUsed} />
@@ -265,7 +289,8 @@ const Dashboard = () => {
             <Flex width="100%" alignItems="center" justifyContent="space-between" mt="10" px="10" >
                 <Heading fontSize="2xl" >Usage Reports</Heading>
                 <Flex gap="3">
-                    <Button>Generate Report</Button>
+                    <Button onClick={() => exportToCsv(gridElement, `report-from:${tableData[0]?.date}:to:${tableData[1]?.date}.csv`)} rightIcon={<AiOutlineDownload size="25" />}>Generate Report (.csv)</Button>
+                    {/* <Button onClick={() => exportToXlsx(gridElement, 'data.xlsx')}>Generate Report (.xlsx)</Button> */}
                     {/* <Flex gap="2">
                         <IconButton aria-label='icon' icon={<FiChevronLeft />} isDisabled={currentActive == 0} onClick={() => setCurrentActive(currentActive - 1)} />
                         <Button isDisabled>{result[currentActive]?.date}</Button>
@@ -273,16 +298,8 @@ const Dashboard = () => {
                     </Flex> */}
                 </Flex>
             </Flex>
-            <Flex px="10" mt="2">
-                <ReactDataGrid
-                    idProperty="id"
-                    style={gridStyle}
-                    columns={columns}
-                    pagination
-                    dataSource={tableData}
-                    defaultLimit={10}
-                    rowHeight={60}
-                />
+            <Flex px="10" mt="2" width="100%" mb="4">
+                {gridElement}
             </Flex>
             <Divider my="5" />
         </Flex>
